@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 248 250 252; /* #F8FAFC */
+  --fg: 15 23 42;
+  --surface: 255 255 255;
+  --surface-alpha: 0.6;
+  --border-alpha: 0.08;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: 11 15 23; /* #0B0F17 */
+  --fg: 226 232 240;
+  --surface: 255 255 255;
+  --surface-alpha: 0.05;
+  --border-alpha: 0.1;
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Glass surface used for cards, panels, nav bars, and modals.
+   No backdrop-filter here on purpose: it is re-computed every scroll frame
+   for each element and was the main source of scroll jank on card grids. */
+.glass {
+  background-color: rgba(var(--surface), var(--surface-alpha));
+  border: 1px solid rgba(var(--surface), var(--border-alpha));
+}
+
+/* Opt-in real blur — use only on a few overlays/sticky bars. */
+.glass-blur {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass {
+  border-color: rgba(255, 255, 255, var(--border-alpha));
+}
+
+.glass-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.glass-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -12px rgba(99, 102, 241, 0.35);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 1rem;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.12) 25%,
+    rgba(148, 163, 184, 0.24) 37%,
+    rgba(148, 163, 184, 0.12) 63%
+  );
+  background-size: 700px 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* Focus visibility kept even on custom controls. */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
+}

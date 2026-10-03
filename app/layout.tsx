@@ -1,0 +1,26 @@
+import type { Metadata } from "next";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" });
+
+export const metadata: Metadata = {
+  title: "Pulse — Event & Attendance Control",
+  description: "Real-time event management and QR check-in.",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen font-sans antialiased">
+        <ThemeProvider>
+          {children}
+          <Toaster theme="dark" position="top-right" richColors />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
