@@ -4,6 +4,7 @@
 export type UserRole = "ADMIN" | "ORGANIZER" | "ATTENDEE";
 export type RegistrationStatus = "REGISTERED" | "CHECKED_IN" | "NO_SHOW" | "CANCELLED";
 export type EventStatus = "UPCOMING" | "ONGOING" | "PAST";
+export type Gender = "MALE" | "FEMALE" | "OTHER";
 
 export interface Database {
   public: {
@@ -14,6 +15,8 @@ export interface Database {
           full_name: string;
           avatar_url: string | null;
           phone: string | null;
+          date_of_birth: string | null;
+          gender: Gender | null;
           role: UserRole;
           is_locked: boolean;
           no_show_count: number;
