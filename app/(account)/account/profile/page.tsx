@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ProfileForm } from "@/components/account/ProfileForm";
+import { AccountBreadcrumb } from "@/components/account/AccountBreadcrumb";
 import { createClient, getCurrentUser } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default async function ProfilePage() {
 
   return (
     <section className="space-y-8">
+      <AccountBreadcrumb items={["Cài đặt tài khoản", "Thông tin tài khoản"]} />
       <h1 className="border-b border-slate-200 pb-4 font-display text-2xl font-bold dark:border-white/10">
         Thông tin tài khoản
       </h1>
