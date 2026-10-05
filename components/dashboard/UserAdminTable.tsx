@@ -13,6 +13,7 @@ export function UserAdminTable({ initialUsers, currentAdminId }: { initialUsers:
   const [users, setUsers] = useState(initialUsers);
   const [query, setQuery] = useState("");
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [pendingRoleId, setPendingRoleId] = useState<string | null>(null);
 
   const filtered = users.filter((u) => u.full_name.toLowerCase().includes(query.toLowerCase()));
 
@@ -42,6 +43,33 @@ export function UserAdminTable({ initialUsers, currentAdminId }: { initialUsers:
     }
   }
 
+  async function changeRole(user: Profile, newRole: Profile["role"]) {
+    if (user.id === currentAdminId) return; // Admins shouldn't change their own role here
+    
+    setPendingRoleId(user.id);
+
+    try {
+      const res = await fetch("/api/admin/change-role", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, newRole }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json();
+        toast.error(body.error ?? "Failed to update role");
+        return;
+      }
+
+      setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, role: newRole } : u)));
+      toast.success(`Role updated to ${newRole}`);
+    } catch (err) {
+      toast.error("Network error — please try again");
+    } finally {
+      setPendingRoleId(null);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="relative max-w-xs">
@@ -55,7 +83,16 @@ export function UserAdminTable({ initialUsers, currentAdminId }: { initialUsers:
             <div>
               <p className="flex items-center gap-2 text-sm font-medium">
                 {user.full_name}
-                <Badge tone="neutral">{user.role}</Badge>
+                <select
+                  value={user.role}
+                  onChange={(e) => changeRole(user, e.target.value as Profile["role"])}
+                  disabled={user.id === currentAdminId || pendingRoleId === user.id}
+                  className="bg-transparent border border-white/10 rounded px-2 py-0.5 text-xs font-medium focus:outline-none focus:border-white/20 disabled:opacity-50"
+                >
+                  <option value="ADMIN" className="bg-slate-900">ADMIN</option>
+                  <option value="ORGANIZER" className="bg-slate-900">ORGANIZER</option>
+                  <option value="ATTENDEE" className="bg-slate-900">ATTENDEE</option>
+                </select>
                 {user.no_show_count >= 3 && (
                   <span className="flex items-center gap-1 text-xs text-status-warning">
                     <ShieldAlert size={12} /> {user.no_show_count} no-shows

@@ -99,7 +99,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
       setLoading(false);
     }
     load();
-  }, [params.id]);
+  }, [params.id, router, supabase]);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => f ? { ...f, [key]: value } : f);

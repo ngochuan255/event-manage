@@ -62,6 +62,7 @@ export async function MainHeader() {
             <div className="group relative">
               <button className="flex items-center gap-2 text-sm font-medium hover:bg-white/10 px-3 py-1.5 rounded-full transition-colors">
                 {profile?.avatar_url ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={profile.avatar_url} alt={profile.full_name} className="w-6 h-6 rounded-full object-cover" />
                 ) : (
                   <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
